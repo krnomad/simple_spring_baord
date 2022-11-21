@@ -3,6 +3,7 @@ package com.study.board.controller;
 import com.study.board.entity.Board;
 import com.study.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,6 +19,7 @@ import java.io.IOException;
 
 @Controller
 public class BoardController {
+    public static final int MAX_PAGE=10;
     @Autowired
     private BoardService boardService;
 
@@ -41,8 +43,19 @@ public class BoardController {
 
     // http://localhost:8090/board/list?page=1&size=10
     @GetMapping("/board/list")
-    public String boardList(Model model, @PageableDefault(page=10, size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("list", boardService.boardList(pageable));
+    public String boardList(Model model, @PageableDefault(page=0, size=MAX_PAGE, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<Board> list = boardService.boardList(pageable);
+
+        // TODO: fix page bug. Apply page algorithm
+        int nowPage = pageable.getPageNumber()+1 ;
+        int pageAxis = (nowPage / MAX_PAGE) * MAX_PAGE;
+        int startPage = pageAxis+1;
+        int endPage = Math.min(pageAxis+MAX_PAGE, list.getTotalPages())+1;
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "boardlist";
     }
 
