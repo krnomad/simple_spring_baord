@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>게시글 상세 페이지</title>
 </head>
 <body>
-$END$
+<h1 th:text="${board.title}">제목 입니다.</h1>
+<p th:text="${board.content}">내용이 들어갈 부분입니다.</p>
+<!--#은 자기 자신 페이지를 불러오는 것-->
+<a th:href="@{/board/delete(id=${board.id})}">글삭제</a>
 </body>
 </html>
