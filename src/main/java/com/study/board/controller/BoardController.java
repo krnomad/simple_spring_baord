@@ -42,10 +42,18 @@ public class BoardController {
     }
 
     // http://localhost:8090/board/list?page=1&size=10
+    // http://localhost:8090/board/list?searchKeyword=11&page=1
+    // http://localhost:8090/board/list?searchKeyword=11
     @GetMapping("/board/list")
-    public String boardList(Model model, @PageableDefault(page=0, size=MAX_PAGE, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String boardList(Model model, @PageableDefault(page=0, size=MAX_PAGE, sort="id", direction = Sort.Direction.DESC) Pageable pageable,
+                            String searchKeyword) {
 
-        Page<Board> list = boardService.boardList(pageable);
+        Page<Board> list;
+        if( searchKeyword == null ) {
+            list = boardService.boardList(pageable);
+        } else {
+            list = boardService.boardSearchList(searchKeyword, pageable);
+        }
 
         // TODO: fix page bug. Apply page algorithm
         int nowPage = pageable.getPageNumber()+1 ;
@@ -56,6 +64,7 @@ public class BoardController {
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+
         return "boardlist";
     }
 
