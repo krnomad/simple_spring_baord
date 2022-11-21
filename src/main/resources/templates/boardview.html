@@ -9,5 +9,7 @@
 <p th:text="${board.content}">내용이 들어갈 부분입니다.</p>
 <!--#은 자기 자신 페이지를 불러오는 것-->
 <a th:href="@{/board/delete(id=${board.id})}">글삭제</a>
+<!--Path variable 방식은 Query variable방식 보다 깔끔하게 역슬래시 뒤에 variable을 넘겨 처리가 가능-->
+<a th:href="${/board/modify/{id}(id=${board.id})">수정</a>
 </body>
 </html>
